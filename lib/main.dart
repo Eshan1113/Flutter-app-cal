@@ -6,7 +6,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Real Calculator',
+      title: 'Calculator',
       theme: ThemeData(primarySwatch: Colors.teal),
       home: CalculatorScreen(),
     );
@@ -24,6 +24,32 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   double _num1 = 0;
   double _num2 = 0;
   String _operator = '';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showWelcomeDialog();
+    });
+  }
+
+  void _showWelcomeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Welcome'),
+          content: Text('Developed by Eshan Dananjaya'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _onButtonPressed(String value) {
     setState(() {
@@ -114,28 +140,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: buttons.map((button) {
           return Expanded(
-            child: GestureDetector(
-              onTap: () => _onButtonPressed(button),
-              child: Container(
-                margin: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: button == '=' ? Colors.teal : Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade400,
-                      offset: Offset(2, 2),
-                      blurRadius: 4,
-                    )
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    button,
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: button == '=' ? Colors.white : Colors.black,
-                      fontWeight: FontWeight.bold,
+            child: Material(
+              color: button == '=' ? Colors.teal : Colors.white,
+              child: InkWell(
+                onTap: () => _onButtonPressed(button),
+                splashColor: Colors.tealAccent,
+                child: Container(
+                  margin: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      button,
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: button == '=' ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
